@@ -210,6 +210,7 @@ class StateStack {
 
     set(states, index) {
         this.states = states.map(state => new State(state));
+        if (isNan) index = this.states.length - 1;
         this.currentIndex = index;
         this.currentState = this.states[this.currentIndex];
         this.resolve();
