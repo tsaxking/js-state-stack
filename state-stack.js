@@ -280,6 +280,18 @@ class StateStack {
             currentIndex: this.currentIndex
         });
     }
+
+    /**
+     * 
+     * @param {String} json JSON string of the stack 
+     * @returns {StateStack} New StateStack object
+     */
+    static fromJson(json) {
+        const stack = new StateStack();
+        const obj = JSON.parse(json);
+        stack.set(obj.states, obj.currentIndex);
+        return stack;
+    }
 }
 
 
@@ -479,5 +491,46 @@ class BranchStack {
 
         this.currentBranch = this.branches[newTitle];
         this.currentPointer = newTitle;
+    }
+
+    /**
+     * 
+     * @returns {String} JSON string of all branches
+     */
+    toJson() {
+        return JSON.stringify(Object.keys(this.branches).map(title => {
+            const branch = this.branches[title];
+            return {
+                title,
+                states: branch.states,
+                currentIndex: branch.currentIndex,
+                locked: branch.locked,
+                currentState: branch.currentState,
+                mergeFrom: branch.mergeFrom
+            };
+        }));
+    }
+
+    /**
+     * 
+     * @param {String} json JSON string of all branches 
+     * @returns {BranchStack} New BranchStack object
+     */
+    static fromJson(json) {
+        const branchStack = new BranchStack();
+        const branches = JSON.parse(json);
+
+        branches.forEach(branch => {
+            const newBranch = new StateStack();
+            newBranch.states = branch.states;
+            newBranch.currentIndex = branch.currentIndex;
+            newBranch.locked = branch.locked;
+            newBranch.currentState = branch.currentState;
+            newBranch.mergeFrom = branch.mergeFrom;
+
+            branchStack.newBranch(newBranch, branch.title);
+        });
+
+        return branchStack;
     }
 }
