@@ -209,6 +209,21 @@ class StateStack {
     }
 
     /**
+     * 
+     * @param {Array[Any]} states The states to set the stack to 
+     * @param {Number} index The index to set the current state to (defaults to the last state in the stack)
+     */
+    set(states, index) {
+        if (!Array.isArray(states)) throw new Error('states must be an array');
+
+        this.states = states.map(state => new State(state));
+        if (isNan) index = this.states.length - 1;
+        this.currentIndex = index;
+        this.currentState = this.states[this.currentIndex];
+        this.resolve();
+    }
+
+    /**
      * @description Gets the number of states in the current stack
      */
     get numStacks() {
@@ -253,6 +268,29 @@ class StateStack {
 
     get hasPrev() {
         return this.currentIndex > 0;
+    }
+
+    /**
+     * 
+     * @returns {String} JSON string of the stack
+     */
+    toJson() {
+        return JSON.stringify({
+            states: this.states.map(s => s.content),
+            currentIndex: this.currentIndex
+        });
+    }
+
+    /**
+     * 
+     * @param {String} json JSON string of the stack 
+     * @returns {StateStack} New StateStack object
+     */
+    static fromJson(json) {
+        const stack = new StateStack();
+        const obj = JSON.parse(json);
+        stack.set(obj.states, obj.currentIndex);
+        return stack;
     }
 }
 
@@ -453,5 +491,46 @@ class BranchStack {
 
         this.currentBranch = this.branches[newTitle];
         this.currentPointer = newTitle;
+    }
+
+    /**
+     * 
+     * @returns {String} JSON string of all branches
+     */
+    toJson() {
+        return JSON.stringify(Object.keys(this.branches).map(title => {
+            const branch = this.branches[title];
+            return {
+                title,
+                states: branch.states,
+                currentIndex: branch.currentIndex,
+                locked: branch.locked,
+                currentState: branch.currentState,
+                mergeFrom: branch.mergeFrom
+            };
+        }));
+    }
+
+    /**
+     * 
+     * @param {String} json JSON string of all branches 
+     * @returns {BranchStack} New BranchStack object
+     */
+    static fromJson(json) {
+        const branchStack = new BranchStack();
+        const branches = JSON.parse(json);
+
+        branches.forEach(branch => {
+            const newBranch = new StateStack();
+            newBranch.states = branch.states;
+            newBranch.currentIndex = branch.currentIndex;
+            newBranch.locked = branch.locked;
+            newBranch.currentState = branch.currentState;
+            newBranch.mergeFrom = branch.mergeFrom;
+
+            branchStack.newBranch(newBranch, branch.title);
+        });
+
+        return branchStack;
     }
 }
