@@ -113,6 +113,48 @@ class StateStack {
     }
 
     /**
+     * Goes to the last state in the stack
+     */
+    last() {
+        if (this.states.length > 0) {
+            this.currentIndex = this.states.length - 1;
+            this.currentState = this.states[this.currentIndex];
+            this.resolve();
+        } else {
+            this.onReject(this.currentState.content);
+        }
+    }
+
+    /**
+     * Goes to the first state in the stack
+     */
+    first() {
+        if (this.states.length > 0) {
+            this.currentIndex = 0;
+            this.currentState = this.states[this.currentIndex];
+            this.resolve();
+        } else {
+            this.onReject(this.currentState.content);
+        }
+    }
+
+    /**
+     * 
+     * @param {Array[Any]} states The states to set the stack to 
+     * @param {Number} index The index to set the current state to (defaults to the last state in the stack)
+     */
+    set(states, index) {
+        if (!Array.isArray(states)) throw new Error('states must be an array');
+
+        this.states = states.map(state => new State(state));
+        if (isNan) index = this.states.length - 1;
+        this.currentIndex = index;
+        this.currentState = this.states[this.currentIndex];
+        this.resolve();
+    }
+
+
+    /**
      * @description Gets the number of states in the current stack
      */
     get numStacks() {

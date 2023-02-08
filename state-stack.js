@@ -208,6 +208,11 @@ class StateStack {
         }
     }
 
+    /**
+     * 
+     * @param {Array[Any]} states The states to set the stack to 
+     * @param {Number} index The index to set the current state to (defaults to the last state in the stack)
+     */
     set(states, index) {
         if (!Array.isArray(states)) throw new Error('states must be an array');
 
