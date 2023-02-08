@@ -208,6 +208,13 @@ class StateStack {
         }
     }
 
+    set(states, index) {
+        this.states = states.map(state => new State(state));
+        this.currentIndex = index;
+        this.currentState = this.states[this.currentIndex];
+        this.resolve();
+    }
+
     /**
      * @description Gets the number of states in the current stack
      */
