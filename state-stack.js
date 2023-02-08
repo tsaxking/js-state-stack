@@ -26,12 +26,14 @@ class State {
      */
     copy() {
         if (typeof this.content === 'object') {
-            return {...this.content };
+            this.content = {...this.content };
         } else if (Array.isArray(this.content)) {
-            return [...this.content];
+            this.content = [...this.content];
         } else {
-            return JSON.parse(JSON.stringify(this.content));
+            this.content = JSON.parse(JSON.stringify(this.content));
         }
+
+        return this;
     }
 }
 
