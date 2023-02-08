@@ -25,10 +25,10 @@ class State {
      * @public
      */
     copy() {
-        if (typeof this.content === 'object') {
-            this.content = {...this.content };
-        } else if (Array.isArray(this.content)) {
+        if (Array.isArray(this.content)) {
             this.content = [...this.content];
+        } else if (typeof this.content === 'object') {
+            this.content = {...this.content };
         } else {
             this.content = JSON.parse(JSON.stringify(this.content));
         }
