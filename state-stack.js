@@ -209,6 +209,8 @@ class StateStack {
     }
 
     set(states, index) {
+        if (!Array.isArray(states)) throw new Error('states must be an array');
+
         this.states = states.map(state => new State(state));
         if (isNan) index = this.states.length - 1;
         this.currentIndex = index;
