@@ -26,9 +26,9 @@ class State {
      */
     copy() {
         if (typeof this.content === 'object') {
-            return {...content }
+            return {...this.content };
         } else if (Array.isArray(this.content)) {
-            return [...content]
+            return [...this.content];
         } else {
             return JSON.parse(JSON.stringify(this.content));
         }
