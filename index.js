@@ -200,6 +200,17 @@ class StateStack {
     get hasPrev() {
         return this.currentIndex > 0;
     }
+
+    /**
+     * 
+     * @returns {String} JSON string of the stack
+     */
+    toJson() {
+        return JSON.stringify({
+            states: this.states.map(s => s.content),
+            currentIndex: this.currentIndex
+        });
+    }
 }
 
 
