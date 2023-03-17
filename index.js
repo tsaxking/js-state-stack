@@ -25,13 +25,15 @@ class State {
      * @public
      */
     copy() {
-        if (typeof this.content === 'object') {
-            return {...content }
-        } else if (Array.isArray(this.content)) {
-            return [...content]
+        if (Array.isArray(this.content)) {
+            this.content = [...this.content];
+        } else if (typeof this.content === 'object') {
+            this.content = {...this.content };
         } else {
-            return JSON.parse(JSON.stringify(this.content));
+            this.content = JSON.parse(JSON.stringify(this.content));
         }
+
+        return this;
     }
 }
 
@@ -217,7 +219,7 @@ class StateStack {
         if (!Array.isArray(states)) throw new Error('states must be an array');
 
         this.states = states.map(state => new State(state));
-        if (isNan) index = this.states.length - 1;
+        if (isNaN(index)) index = this.states.length - 1;
         this.currentIndex = index;
         this.currentState = this.states[this.currentIndex];
         this.resolve();
